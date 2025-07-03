@@ -173,51 +173,7 @@ class ChartManager {
 
     // Get cost pie chart data
     getCostPieChartData() {
-        const products = dataManager.getFilteredProducts();
-        
-        if (products.length === 0) {
-            return {
-                labels: ['데이터 없음'],
-                data: [1],
-                backgroundColor: ['#e5e7eb']
-            };
-        }
-
-        const totalProductCost = products.reduce((sum, p) => sum + (p.cost * p.quantity), 0);
-        const totalMarketing = products.reduce((sum, p) => sum + p.marketing, 0);
-        const totalSales = products.reduce((sum, p) => sum + p.sales, 0);
-        const totalEtc = products.reduce((sum, p) => sum + p.etc, 0);
-
-        // Only show categories with values > 0
-        const data = [];
-        const labels = [];
-        const backgroundColor = [];
-
-        if (totalProductCost > 0) {
-            data.push(totalProductCost);
-            labels.push('제품원가');
-            backgroundColor.push('#3b82f6');
-        }
-
-        if (totalMarketing > 0) {
-            data.push(totalMarketing);
-            labels.push('마케팅비');
-            backgroundColor.push('#ef4444');
-        }
-
-        if (totalSales > 0) {
-            data.push(totalSales);
-            labels.push('영업비');
-            backgroundColor.push('#f59e0b');
-        }
-
-        if (totalEtc > 0) {
-            data.push(totalEtc);
-            labels.push('기타비용');
-            backgroundColor.push('#10b981');
-        }
-
-        return { labels, data, backgroundColor };
+        return dataManager.getCostPieChartData();
     }
 
     // Update charts

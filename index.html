@@ -16,7 +16,7 @@
                     <h1 class="text-2xl font-bold text-gray-900">
                         제품별 손익구조 분석 대시보드
                     </h1>
-                    <div class="text-sm text-gray-500">프로토타입 v1.0</div>
+                    <div class="text-sm text-gray-500">프로토타입 v2.0</div>
                 </div>
             </div>
         </header>
@@ -44,7 +44,7 @@
             <!-- Filter Section -->
             <div class="bg-white rounded-lg shadow p-6 mb-8">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">필터</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label
                             class="block text-sm font-medium text-gray-700 mb-2"
@@ -70,6 +70,18 @@
                         >
                         <select
                             id="brand-filter"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">전체</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-2"
+                            >채널 선택</label
+                        >
+                        <select
+                            id="channel-filter"
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="">전체</option>
@@ -123,12 +135,22 @@
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
+                                        채널
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
                                         판매가
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
                                         판매수량
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    >
+                                        재고
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -174,134 +196,277 @@
                     </div>
                     <div class="p-6">
                         <form id="product-form">
-                            <div
-                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                            >
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >브랜드</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="brand-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                            <!-- Basic Information -->
+                            <div class="mb-6">
+                                <h3
+                                    class="text-md font-semibold text-gray-900 mb-4"
+                                >
+                                    기본 정보
+                                </h3>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >브랜드</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="brand-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >제품명</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="product-name-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >유통채널</label
+                                        >
+                                        <select
+                                            id="channel-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        >
+                                            <option value="">채널 선택</option>
+                                            <option value="G마켓">G마켓</option>
+                                            <option value="자사몰">
+                                                자사몰
+                                            </option>
+                                            <option value="11번가">
+                                                11번가
+                                            </option>
+                                            <option value="쿠팡">쿠팡</option>
+                                            <option value="올리브영">
+                                                올리브영
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >월</label
+                                        >
+                                        <select
+                                            id="month-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        >
+                                            <option value="2024-01">
+                                                2024년 1월
+                                            </option>
+                                            <option value="2024-02">
+                                                2024년 2월
+                                            </option>
+                                            <option value="2024-03">
+                                                2024년 3월
+                                            </option>
+                                            <option value="2024-04">
+                                                2024년 4월
+                                            </option>
+                                            <option value="2024-05">
+                                                2024년 5월
+                                            </option>
+                                            <option value="2024-06">
+                                                2024년 6월
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >제품명</label
-                                    >
-                                    <input
-                                        type="text"
-                                        id="product-name-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                            </div>
+
+                            <!-- Sales Information -->
+                            <div class="mb-6">
+                                <h3
+                                    class="text-md font-semibold text-gray-900 mb-4"
+                                >
+                                    판매 정보
+                                </h3>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >판매가 (원)</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="price-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >공급가 (원)</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="cost-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >판매수량</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="quantity-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >수수료율 (%)</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="commission-rate-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value="5.0"
+                                            step="0.1"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >월</label
-                                    >
-                                    <select
-                                        id="month-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    >
-                                        <option value="2024-01">
-                                            2024년 1월
-                                        </option>
-                                        <option value="2024-02">
-                                            2024년 2월
-                                        </option>
-                                        <option value="2024-03">
-                                            2024년 3월
-                                        </option>
-                                        <option value="2024-04">
-                                            2024년 4월
-                                        </option>
-                                        <option value="2024-05">
-                                            2024년 5월
-                                        </option>
-                                        <option value="2024-06">
-                                            2024년 6월
-                                        </option>
-                                    </select>
+                            </div>
+
+                            <!-- Inventory Information -->
+                            <div class="mb-6">
+                                <h3
+                                    class="text-md font-semibold text-gray-900 mb-4"
+                                >
+                                    재고 정보
+                                </h3>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >재고수량</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="stock-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value="0"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >리오더 일자</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="reorder-date-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >판매가 (원)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="price-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
+                            </div>
+
+                            <!-- Settlement Information -->
+                            <div class="mb-6">
+                                <h3
+                                    class="text-md font-semibold text-gray-900 mb-4"
+                                >
+                                    정산 정보
+                                </h3>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >정산액 (원)</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="settlement-amount-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value="0"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >정산일</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="settlement-date-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >공급가 (원)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="cost-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >판매수량</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="quantity-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >마케팅비 (원)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="marketing-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        value="0"
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >영업비 (원)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="sales-cost-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        value="0"
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 mb-2"
-                                        >기타비용 (원)</label
-                                    >
-                                    <input
-                                        type="number"
-                                        id="etc-cost-input"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        value="0"
-                                    />
+                            </div>
+
+                            <!-- Cost Information -->
+                            <div class="mb-6">
+                                <h3
+                                    class="text-md font-semibold text-gray-900 mb-4"
+                                >
+                                    비용 정보
+                                </h3>
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-3 gap-4"
+                                >
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >마케팅비 (원)</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="marketing-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value="0"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >영업비 (원)</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="sales-cost-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value="0"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-gray-700 mb-2"
+                                            >기타비용 (원)</label
+                                        >
+                                        <input
+                                            type="number"
+                                            id="etc-cost-input"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value="0"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -407,6 +572,65 @@
                         </h3>
                         <div class="h-80">
                             <canvas id="cost-pie-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Channel Analysis -->
+                <div class="bg-white rounded-lg shadow mb-8">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">
+                            채널별 분석
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                        >
+                            <div class="text-center">
+                                <div
+                                    class="text-2xl font-bold text-blue-600"
+                                    id="channel-gmarket-revenue"
+                                >
+                                    0원
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    G마켓 매출
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div
+                                    class="text-2xl font-bold text-green-600"
+                                    id="channel-own-revenue"
+                                >
+                                    0원
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    자사몰 매출
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div
+                                    class="text-2xl font-bold text-purple-600"
+                                    id="channel-11st-revenue"
+                                >
+                                    0원
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    11번가 매출
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div
+                                    class="text-2xl font-bold text-orange-600"
+                                    id="channel-coupang-revenue"
+                                >
+                                    0원
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    쿠팡 매출
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

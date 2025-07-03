@@ -5,7 +5,8 @@ class DataManager {
         this.filteredProducts = [];
         this.currentFilters = {
             month: '',
-            brand: ''
+            brand: '',
+            channel: ''
         };
     }
 
@@ -16,7 +17,7 @@ class DataManager {
             const data = await response.json();
             this.products = this.flattenProducts(data);
             this.filteredProducts = [...this.products];
-            this.updateBrandFilter();
+            this.updateFilters();
             return this.products;
         } catch (error) {
             console.error('Error loading data:', error);
@@ -38,6 +39,12 @@ class DataManager {
         return flattened;
     }
 
+    // Update filter options
+    updateFilters() {
+        this.updateBrandFilter();
+        this.updateChannelFilter();
+    }
+
     // Update brand filter options
     updateBrandFilter() {
         const brands = [...new Set(this.products.map(p => p.brand))];
@@ -54,14 +61,31 @@ class DataManager {
         });
     }
 
+    // Update channel filter options
+    updateChannelFilter() {
+        const channels = [...new Set(this.products.map(p => p.channel))];
+        const channelFilter = document.getElementById('channel-filter');
+        
+        // Clear existing options except "전체"
+        channelFilter.innerHTML = '<option value="">전체</option>';
+        
+        channels.forEach(channel => {
+            const option = document.createElement('option');
+            option.value = channel;
+            option.textContent = channel;
+            channelFilter.appendChild(option);
+        });
+    }
+
     // Apply filters
-    applyFilters(month = '', brand = '') {
-        this.currentFilters = { month, brand };
+    applyFilters(month = '', brand = '', channel = '') {
+        this.currentFilters = { month, brand, channel };
         
         this.filteredProducts = this.products.filter(product => {
             const monthMatch = !month || product.month === month;
             const brandMatch = !brand || product.brand === brand;
-            return monthMatch && brandMatch;
+            const channelMatch = !channel || product.channel === channel;
+            return monthMatch && brandMatch && channelMatch;
         });
 
         return this.filteredProducts;
@@ -85,8 +109,8 @@ class DataManager {
         };
         
         this.products.push(newProduct);
-        this.applyFilters(this.currentFilters.month, this.currentFilters.brand);
-        this.updateBrandFilter();
+        this.applyFilters(this.currentFilters.month, this.currentFilters.brand, this.currentFilters.channel);
+        this.updateFilters();
         
         return newProduct;
     }
@@ -96,7 +120,7 @@ class DataManager {
         const index = this.products.findIndex(p => p.id === productId);
         if (index !== -1) {
             this.products[index] = { ...this.products[index], ...productData };
-            this.applyFilters(this.currentFilters.month, this.currentFilters.brand);
+            this.applyFilters(this.currentFilters.month, this.currentFilters.brand, this.currentFilters.channel);
             return this.products[index];
         }
         return null;
@@ -107,8 +131,8 @@ class DataManager {
         const index = this.products.findIndex(p => p.id === productId);
         if (index !== -1) {
             this.products.splice(index, 1);
-            this.applyFilters(this.currentFilters.month, this.currentFilters.brand);
-            this.updateBrandFilter();
+            this.applyFilters(this.currentFilters.month, this.currentFilters.brand, this.currentFilters.channel);
+            this.updateFilters();
             return true;
         }
         return false;
@@ -122,13 +146,15 @@ class DataManager {
     // Calculate product metrics
     calculateProductMetrics(product) {
         const totalRevenue = product.price * product.quantity;
+        const commissionAmount = totalRevenue * (product.commissionRate / 100);
         const totalCost = (product.cost * product.quantity) + product.marketing + product.sales + product.etc;
-        const netProfit = totalRevenue - totalCost;
+        const netProfit = totalRevenue - totalCost - commissionAmount;
         const profitRate = totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0;
 
         return {
             totalRevenue,
             totalCost,
+            commissionAmount,
             netProfit,
             profitRate
         };
@@ -142,6 +168,7 @@ class DataManager {
             return {
                 totalRevenue: 0,
                 totalCost: 0,
+                totalCommission: 0,
                 netProfit: 0,
                 averageProfitRate: 0
             };
@@ -151,15 +178,44 @@ class DataManager {
         const totalCost = products.reduce((sum, p) => {
             return sum + (p.cost * p.quantity) + p.marketing + p.sales + p.etc;
         }, 0);
-        const netProfit = totalRevenue - totalCost;
+        const totalCommission = products.reduce((sum, p) => {
+            return sum + ((p.price * p.quantity) * (p.commissionRate / 100));
+        }, 0);
+        const netProfit = totalRevenue - totalCost - totalCommission;
         const averageProfitRate = totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0;
 
         return {
             totalRevenue,
             totalCost,
+            totalCommission,
             netProfit,
             averageProfitRate
         };
+    }
+
+    // Get channel analysis
+    getChannelAnalysis() {
+        const products = this.filteredProducts;
+        const channelStats = {};
+        
+        products.forEach(product => {
+            const channel = product.channel;
+            const revenue = product.price * product.quantity;
+            
+            if (!channelStats[channel]) {
+                channelStats[channel] = {
+                    revenue: 0,
+                    quantity: 0,
+                    products: 0
+                };
+            }
+            
+            channelStats[channel].revenue += revenue;
+            channelStats[channel].quantity += product.quantity;
+            channelStats[channel].products += 1;
+        });
+
+        return channelStats;
     }
 
     // Get chart data for profit bar chart
@@ -178,7 +234,7 @@ class DataManager {
     }
 
     // Get chart data for cost pie chart
-    getCostChartData() {
+    getCostPieChartData() {
         const products = this.filteredProducts;
         
         if (products.length === 0) {
@@ -193,12 +249,64 @@ class DataManager {
         const totalMarketing = products.reduce((sum, p) => sum + p.marketing, 0);
         const totalSales = products.reduce((sum, p) => sum + p.sales, 0);
         const totalEtc = products.reduce((sum, p) => sum + p.etc, 0);
+        const totalCommission = products.reduce((sum, p) => {
+            return sum + ((p.price * p.quantity) * (p.commissionRate / 100));
+        }, 0);
 
-        return {
-            labels: ['제품원가', '마케팅비', '영업비', '기타비용'],
-            data: [totalProductCost, totalMarketing, totalSales, totalEtc],
-            backgroundColor: ['#3b82f6', '#ef4444', '#f59e0b', '#10b981']
-        };
+        // Only show categories with values > 0
+        const data = [];
+        const labels = [];
+        const backgroundColor = [];
+
+        if (totalProductCost > 0) {
+            data.push(totalProductCost);
+            labels.push('제품원가');
+            backgroundColor.push('#3b82f6');
+        }
+
+        if (totalMarketing > 0) {
+            data.push(totalMarketing);
+            labels.push('마케팅비');
+            backgroundColor.push('#ef4444');
+        }
+
+        if (totalSales > 0) {
+            data.push(totalSales);
+            labels.push('영업비');
+            backgroundColor.push('#f59e0b');
+        }
+
+        if (totalCommission > 0) {
+            data.push(totalCommission);
+            labels.push('수수료');
+            backgroundColor.push('#8b5cf6');
+        }
+
+        if (totalEtc > 0) {
+            data.push(totalEtc);
+            labels.push('기타비용');
+            backgroundColor.push('#10b981');
+        }
+
+        return { labels, data, backgroundColor };
+    }
+
+    // Get low stock products (재고 부족 제품)
+    getLowStockProducts(threshold = 10) {
+        return this.products.filter(product => product.stock <= threshold);
+    }
+
+    // Get upcoming reorder products (리오더 예정 제품)
+    getUpcomingReorderProducts(days = 7) {
+        const today = new Date();
+        const futureDate = new Date();
+        futureDate.setDate(today.getDate() + days);
+        
+        return this.products.filter(product => {
+            if (!product.reorderDate) return false;
+            const reorderDate = new Date(product.reorderDate);
+            return reorderDate <= futureDate;
+        });
     }
 
     // Format number to Korean currency
@@ -209,6 +317,13 @@ class DataManager {
     // Format percentage
     formatPercentage(value) {
         return value.toFixed(1) + '%';
+    }
+
+    // Format date
+    formatDate(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ko-KR');
     }
 }
 

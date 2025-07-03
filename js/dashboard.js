@@ -31,7 +31,8 @@ class Dashboard {
         // Real-time calculation inputs
         const calculationInputs = [
             'price-input', 'cost-input', 'quantity-input', 
-            'marketing-input', 'sales-cost-input', 'etc-cost-input'
+            'marketing-input', 'sales-cost-input', 'etc-cost-input',
+            'commission-rate-input'
         ];
 
         calculationInputs.forEach(inputId => {
@@ -72,10 +73,16 @@ class Dashboard {
     populateForm(product) {
         document.getElementById('brand-input').value = product.brand;
         document.getElementById('product-name-input').value = product.name;
+        document.getElementById('channel-input').value = product.channel;
         document.getElementById('month-input').value = product.month;
         document.getElementById('price-input').value = product.price;
         document.getElementById('cost-input').value = product.cost;
         document.getElementById('quantity-input').value = product.quantity;
+        document.getElementById('commission-rate-input').value = product.commissionRate;
+        document.getElementById('stock-input').value = product.stock;
+        document.getElementById('reorder-date-input').value = product.reorderDate;
+        document.getElementById('settlement-amount-input').value = product.settlementAmount;
+        document.getElementById('settlement-date-input').value = product.settlementDate;
         document.getElementById('marketing-input').value = product.marketing;
         document.getElementById('sales-cost-input').value = product.sales;
         document.getElementById('etc-cost-input').value = product.etc;
@@ -111,6 +118,7 @@ class Dashboard {
             this.hideProductForm();
             this.renderProductList();
             this.updateSummaryStats();
+            this.updateChannelAnalysis();
             
             // Trigger chart updates if on preview tab
             if (document.getElementById('preview-content').classList.contains('hidden') === false) {
@@ -126,10 +134,16 @@ class Dashboard {
         return {
             brand: document.getElementById('brand-input').value,
             name: document.getElementById('product-name-input').value,
+            channel: document.getElementById('channel-input').value,
             month: document.getElementById('month-input').value,
             price: parseInt(document.getElementById('price-input').value) || 0,
             cost: parseInt(document.getElementById('cost-input').value) || 0,
             quantity: parseInt(document.getElementById('quantity-input').value) || 0,
+            commissionRate: parseFloat(document.getElementById('commission-rate-input').value) || 0,
+            stock: parseInt(document.getElementById('stock-input').value) || 0,
+            reorderDate: document.getElementById('reorder-date-input').value,
+            settlementAmount: parseInt(document.getElementById('settlement-amount-input').value) || 0,
+            settlementDate: document.getElementById('settlement-date-input').value,
             marketing: parseInt(document.getElementById('marketing-input').value) || 0,
             sales: parseInt(document.getElementById('sales-cost-input').value) || 0,
             etc: parseInt(document.getElementById('etc-cost-input').value) || 0
@@ -144,6 +158,10 @@ class Dashboard {
         }
         if (!data.name.trim()) {
             this.showMessage('제품명을 입력해주세요.', 'error');
+            return false;
+        }
+        if (!data.channel) {
+            this.showMessage('유통채널을 선택해주세요.', 'error');
             return false;
         }
         if (data.price <= 0) {
@@ -176,10 +194,12 @@ class Dashboard {
     applyFilters() {
         const month = document.getElementById('month-filter').value;
         const brand = document.getElementById('brand-filter').value;
+        const channel = document.getElementById('channel-filter').value;
         
-        dataManager.applyFilters(month, brand);
+        dataManager.applyFilters(month, brand, channel);
         this.renderProductList();
         this.updateSummaryStats();
+        this.updateChannelAnalysis();
         
         // Update charts if on preview tab
         if (document.getElementById('preview-content').classList.contains('hidden') === false) {
@@ -197,7 +217,7 @@ class Dashboard {
         if (products.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                    <td colspan="10" class="px-6 py-4 text-center text-gray-500">
                         표시할 제품이 없습니다.
                     </td>
                 </tr>
@@ -209,11 +229,24 @@ class Dashboard {
             const metrics = dataManager.calculateProductMetrics(product);
             const row = document.createElement('tr');
             
+            // Stock status indicator
+            const stockStatus = product.stock <= 10 ? 
+                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">부족</span>` :
+                `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">충분</span>`;
+            
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${product.brand}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${product.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        ${product.channel}
+                    </span>
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${dataManager.formatCurrency(product.price)}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${product.quantity.toLocaleString()}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ${product.stock.toLocaleString()} ${stockStatus}
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">${dataManager.formatCurrency(metrics.totalRevenue)}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${metrics.netProfit >= 0 ? 'text-blue-600' : 'text-red-600'}">${dataManager.formatCurrency(metrics.netProfit)}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${metrics.profitRate >= 0 ? 'text-purple-600' : 'text-red-600'}">${dataManager.formatPercentage(metrics.profitRate)}</td>
@@ -239,6 +272,7 @@ class Dashboard {
                 this.showMessage('제품이 성공적으로 삭제되었습니다.', 'success');
                 this.renderProductList();
                 this.updateSummaryStats();
+                this.updateChannelAnalysis();
                 
                 // Update charts if on preview tab
                 if (document.getElementById('preview-content').classList.contains('hidden') === false) {
@@ -258,6 +292,21 @@ class Dashboard {
         document.getElementById('summary-total-cost').textContent = dataManager.formatCurrency(stats.totalCost);
         document.getElementById('summary-net-profit').textContent = dataManager.formatCurrency(stats.netProfit);
         document.getElementById('summary-profit-rate').textContent = dataManager.formatPercentage(stats.averageProfitRate);
+    }
+
+    // Update channel analysis
+    updateChannelAnalysis() {
+        const channelStats = dataManager.getChannelAnalysis();
+        
+        // Update channel revenue displays
+        document.getElementById('channel-gmarket-revenue').textContent = 
+            dataManager.formatCurrency(channelStats['G마켓']?.revenue || 0);
+        document.getElementById('channel-own-revenue').textContent = 
+            dataManager.formatCurrency(channelStats['자사몰']?.revenue || 0);
+        document.getElementById('channel-11st-revenue').textContent = 
+            dataManager.formatCurrency(channelStats['11번가']?.revenue || 0);
+        document.getElementById('channel-coupang-revenue').textContent = 
+            dataManager.formatCurrency(channelStats['쿠팡']?.revenue || 0);
     }
 
     // Show message
@@ -286,6 +335,7 @@ class Dashboard {
         await dataManager.loadData();
         this.renderProductList();
         this.updateSummaryStats();
+        this.updateChannelAnalysis();
     }
 }
 
