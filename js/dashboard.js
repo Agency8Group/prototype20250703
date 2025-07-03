@@ -217,7 +217,7 @@ class Dashboard {
         if (products.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="10" class="px-6 py-4 text-center text-gray-500">
+                    <td colspan="11" class="px-6 py-4 text-center text-gray-500">
                         표시할 제품이 없습니다.
                     </td>
                 </tr>
@@ -246,6 +246,9 @@ class Dashboard {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${product.quantity.toLocaleString()}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ${product.stock.toLocaleString()} ${stockStatus}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ${dataManager.formatDate(product.reorderDate)}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">${dataManager.formatCurrency(metrics.totalRevenue)}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${metrics.netProfit >= 0 ? 'text-blue-600' : 'text-red-600'}">${dataManager.formatCurrency(metrics.netProfit)}</td>

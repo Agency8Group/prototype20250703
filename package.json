@@ -1,0 +1,43 @@
+{
+  "name": "product-profit-analysis-dashboard",
+  "version": "2.0.0",
+  "description": "제품별 손익구조 분석 대시보드 - HTML/CSS/JavaScript + Tailwind CSS",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000",
+    "build": "echo 'Static HTML project - no build required'",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linter configured'"
+  },
+  "keywords": [
+    "dashboard",
+    "profit-analysis",
+    "product-management",
+    "charts",
+    "tailwind-css",
+    "vanilla-javascript",
+    "data-visualization"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/product-profit-analysis-dashboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/product-profit-analysis-dashboard/issues"
+  },
+  "homepage": "https://github.com/your-username/product-profit-analysis-dashboard#readme",
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+} 
