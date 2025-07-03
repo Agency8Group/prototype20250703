@@ -1,0 +1,154 @@
+[
+  {
+    "brand": "브랜드A",
+    "products": [
+      {
+        "id": "p1",
+        "name": "프리미엄 스킨케어 세트",
+        "price": 150000,
+        "cost": 80000,
+        "quantity": 50,
+        "marketing": 2000000,
+        "sales": 500000,
+        "etc": 300000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p2",
+        "name": "바디로션 500ml",
+        "price": 45000,
+        "cost": 25000,
+        "quantity": 120,
+        "marketing": 800000,
+        "sales": 300000,
+        "etc": 150000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p3",
+        "name": "선케어 크림",
+        "price": 35000,
+        "cost": 18000,
+        "quantity": 200,
+        "marketing": 1200000,
+        "sales": 400000,
+        "etc": 200000,
+        "month": "2024-05"
+      }
+    ]
+  },
+  {
+    "brand": "브랜드B",
+    "products": [
+      {
+        "id": "p4",
+        "name": "헤어케어 샴푸",
+        "price": 28000,
+        "cost": 15000,
+        "quantity": 300,
+        "marketing": 1500000,
+        "sales": 600000,
+        "etc": 250000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p5",
+        "name": "헤어트리트먼트",
+        "price": 38000,
+        "cost": 20000,
+        "quantity": 150,
+        "marketing": 900000,
+        "sales": 350000,
+        "etc": 180000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p6",
+        "name": "헤어에센스",
+        "price": 22000,
+        "cost": 12000,
+        "quantity": 250,
+        "marketing": 700000,
+        "sales": 280000,
+        "etc": 120000,
+        "month": "2024-05"
+      }
+    ]
+  },
+  {
+    "brand": "브랜드C",
+    "products": [
+      {
+        "id": "p7",
+        "name": "메이크업 파운데이션",
+        "price": 65000,
+        "cost": 35000,
+        "quantity": 80,
+        "marketing": 1800000,
+        "sales": 450000,
+        "etc": 220000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p8",
+        "name": "립스틱",
+        "price": 25000,
+        "cost": 12000,
+        "quantity": 180,
+        "marketing": 600000,
+        "sales": 250000,
+        "etc": 100000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p9",
+        "name": "아이라이너",
+        "price": 18000,
+        "cost": 8000,
+        "quantity": 220,
+        "marketing": 400000,
+        "sales": 180000,
+        "etc": 80000,
+        "month": "2024-05"
+      }
+    ]
+  },
+  {
+    "brand": "브랜드D",
+    "products": [
+      {
+        "id": "p10",
+        "name": "핸드크림",
+        "price": 15000,
+        "cost": 7000,
+        "quantity": 400,
+        "marketing": 500000,
+        "sales": 200000,
+        "etc": 100000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p11",
+        "name": "풋크림",
+        "price": 20000,
+        "cost": 10000,
+        "quantity": 150,
+        "marketing": 300000,
+        "sales": 120000,
+        "etc": 60000,
+        "month": "2024-06"
+      },
+      {
+        "id": "p12",
+        "name": "네일케어 세트",
+        "price": 35000,
+        "cost": 18000,
+        "quantity": 100,
+        "marketing": 400000,
+        "sales": 150000,
+        "etc": 80000,
+        "month": "2024-05"
+      }
+    ]
+  }
+] 
